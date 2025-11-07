@@ -1,6 +1,7 @@
 import { useState } from "react";
 import LogoHC from "../assets/logos/logo-hc.png";
 import ChatHC from "../components/Chathc";
+import RatingWidget from "../components/RatingWidget";
 
 const Solution = () => {
   const [cpf, setCpf] = useState("");
@@ -58,6 +59,9 @@ const Solution = () => {
         <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" className="h-10" />
       </div>
 
+      <div className="fixed right-6 bottom-28 z-40">
+        <RatingWidget url="/api/avaliacoes" />
+      </div>
       <ChatHC chatOpen={chatOpen} setChatOpen={setChatOpen} />
     </main>
   );
