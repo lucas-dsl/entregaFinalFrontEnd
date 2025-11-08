@@ -72,7 +72,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
 
     return (
         <div className={className}>
-            {/* botão gatilho (abre/fecha card) */}
+            {/* Botão abre e fecha Card */}
             <button
                 onClick={() => setOpen((v) => !v)}
                 className="rounded-full bg-[#007474] text-white px-4 py-2 sm:py-3 text-sm sm:text-base shadow-lg hover:bg-[#006262] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#007474]"
@@ -81,7 +81,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                 {open ? "Fechar feedback" : "Avaliar chatbot"}
             </button>
 
-            {/* card */}
+            {/* Card */}
             {open && (
                 <div className="mt-3 w-full sm:w-80 rounded-2xl border bg-white/95 shadow-xl backdrop-blur p-4">
                     <div className="flex items-start justify-between">
@@ -128,7 +128,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                 </div>
             )}
 
-            {/* modal com todas as avaliações */}
+            {/* Modal de Avaliações */}
             {showAll && (
                 <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" role="dialog" aria-modal="true">
                     <div className="w-[100vw] sm:w-[92vw] sm:max-w-xl h-[92dvh] sm:h-auto sm:max-h-[80vh] rounded-t-2xl sm:rounded-2xl bg-white shadow-2xl p-4">
