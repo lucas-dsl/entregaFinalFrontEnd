@@ -18,6 +18,14 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
             .catch((e) => setMsg({ text: `Falha ao carregar: ${e.message}`, type: "err" }));
     }, [url]);
 
+    useEffect(() => {
+        function onKey(e: KeyboardEvent) {
+            if (e.key === "Escape") setShowAll(false);
+        }
+        if (showAll) window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [showAll]);
+
     const { media, total } = useMemo(() => {
         if (!itens.length) return { media: 0, total: 0 };
         const soma = itens.reduce((acc, a) => acc + (a.nota || 0), 0);

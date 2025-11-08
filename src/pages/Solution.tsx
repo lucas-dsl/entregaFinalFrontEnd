@@ -59,7 +59,7 @@ const Solution = () => {
         <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" className="h-10" />
       </div>
 
-      <div className="fixed left-6 bottom-8 z-40">
+      <div className="fixed left-6 bottom-7 z-40">
         <RatingWidget url="/api/avaliacoes" />
       </div>
       <ChatHC chatOpen={chatOpen} setChatOpen={setChatOpen} />
