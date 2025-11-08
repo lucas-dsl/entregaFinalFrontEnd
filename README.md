@@ -57,5 +57,13 @@ src
 
 ---
 
+![Demonstração – API 1](src/assets/img/demonstracao-api1.png)
+![Demonstração – API 2](src/assets/img/demonstracao-api-2.png)
+
+Ícones: 
+
+- Mensagem de agradecimento - ✨
+- Avaliação do chatbot - ★★★★★
+
 ## 🚀 Repositório  
 git clone https://github.com/Challenge2025/Sprint2.git
