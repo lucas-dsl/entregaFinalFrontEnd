@@ -4,7 +4,7 @@ Nosso projeto tem como objetivo **reduzir a taxa de absenteísmo das teleconsult
 
 ---
 
-## 📂 Estrutura do Projeto    
+## 📂 Estrutura do Projeto ( Atualizada )
 A estrutura principal do projeto está organizada da seguinte forma:  
 
 ```
@@ -57,13 +57,19 @@ src
 
 ---
 
-![Demonstração – API 1](src/assets/img/demonstracao-api1.png)
+# 🚀 Imagem com caixa para avaliar
+
 ![Demonstração – API 2](src/assets/img/demonstracao-api-2.png)
 
-Ícones: 
+# 🚀 Imagem com modal avaliações
+
+![Demonstração – API 1](src/assets/img/demonstracao-api1.png)
+
+## 🚀 Ícones 
 
 - Mensagem de agradecimento - ✨
 - Avaliação do chatbot - ★★★★★
 
 ## 🚀 Repositório  
-git clone https://github.com/Challenge2025/Sprint2.git
+git clone https://github.com/Challenge2025/sprint4.git
+video explicativo do youtube
