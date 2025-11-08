@@ -113,8 +113,23 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                         onChange={(e) => setComentario(e.target.value)}
                     />
 
-                    <div className={`mt-1 text-right text-xs ${comentario.length > 67 ? 'text-rose-600' : 'text-gray-500'}`}>
-                        {comentario.length}/67
+                    <div className="flex items-center justify-between">
+                        <div className="mt-2 flex justify-end">
+                            <button
+                                type="button"
+                                onClick={() => setComentario("")}
+                                disabled={!comentario.length}
+                                className="text-xs text-gray-600 underline hover:text-gray-900 disabled:opacity-40"
+                                aria-label="Limpar comentário"
+                                title="Limpar comentário"
+                            >
+                                Limpar comentário
+                            </button>
+                        </div>
+
+                        <div className={`mt-1 text-right text-xs ${comentario.length > 67 ? 'text-rose-600' : 'text-gray-500'}`}>
+                            {comentario.length}/67
+                        </div>
                     </div>
 
                     <button
