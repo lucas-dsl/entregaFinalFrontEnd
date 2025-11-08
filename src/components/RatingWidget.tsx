@@ -11,6 +11,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
     const [comentario, setComentario] = useState("");
     const [sending, setSending] = useState(false);
     const [msg, setMsg] = useState<{ text: string; type: "ok" | "err" } | null>(null);
+    const [filtro, setFiltro] = useState<number | null>(null);
 
     useEffect(() => {
         getAvaliacoes(url)
@@ -32,6 +33,11 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
         return { media: soma / itens.length, total: itens.length };
     }, [itens]);
 
+    const itensFiltrados = useMemo(() => {
+        if (filtro == null) return itens;
+        return itens.filter(a => a.nota === filtro);
+    }, [itens, filtro]);
+
     async function enviar() {
         if (!score) {
             setMsg({ text: "Escolha uma nota de 1 a 5.", type: "err" });
@@ -45,12 +51,10 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
         const basePayload = { nota: Number(score), comentario: comentarioSafe };
 
         try {
-            // 1ª tentativa: sem idLog (se o backend já aceitar, passa)
-            await createAvaliacao(basePayload, url);
+            await createAvaliacao(basePayload, url);                    // sem idLog
         } catch (e1: any) {
             try {
-                // 2ª tentativa: com idLog padrão (para backend que ainda exige)
-                await createAvaliacao({ ...basePayload, idLog: 1 }, url);
+                await createAvaliacao({ ...basePayload, idLog: 1 }, url); // fallback com idLog
             } catch (e2: any) {
                 setMsg({ text: `Não foi possível enviar: ${e2.message}`, type: "err" });
                 setSending(false);
@@ -151,21 +155,55 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                             </button>
                         </div>
 
+                        <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
+                            <span className="text-gray-600">Filtrar:</span>
+
+                            <button
+                                type="button"
+                                onClick={() => setFiltro(null)}
+                                className={`px-2.5 py-1 rounded-lg border transition
+                                ${filtro == null ? "bg-cyan-600 text-white border-cyan-600"
+                                        : "border-gray-300 text-gray-700 hover:bg-gray-50"}`}
+                                aria-pressed={filtro == null}
+                            >
+                                Todas
+                            </button>
+
+                            {[1, 2, 3, 4, 5].map(n => (
+                                <button
+                                    key={n}
+                                    type="button"
+                                    onClick={() => setFiltro(n)}
+                                    className={`px-2.5 py-1 rounded-lg border transition
+                                    ${filtro === n ? "bg-cyan-600 text-white border-cyan-600"
+                                            : "border-gray-300 text-gray-700 hover:bg-gray-50"}`}
+                                    aria-pressed={filtro === n}
+                                    title={`Apenas ${n} estrela${n > 1 ? "s" : ""}`}
+                                >
+                                    {n}★
+                                </button>
+                            ))}
+                        </div>
+
                         <div className="max-h-[78dvh] sm:max-h-96 overflow-y-auto pr-1">
                             <ul className="space-y-2">
-                                {itens.length ? (
-                                    itens.map((a) => (
-                                        <li key={a.idAvaliacao} className="rounded-xl border bg-white p-2">
-                                            <div className="flex items-start gap-2">
-                                                <span className="inline-flex items-center justify-center rounded-lg bg-amber-50 px-2 py-0.5 text-amber-600 text-xs font-semibold">
-                                                    {a.nota}★
-                                                </span>
-                                                <span className="text-sm text-gray-700">{a.comentario || "—"}</span>
-                                            </div>
-                                        </li>
-                                    ))
+                                {itensFiltrados.length ? (
+                                    <>
+                                        {itensFiltrados.map((a) => (
+                                            <li key={a.idAvaliacao} className="rounded-xl border bg-white p-2">
+                                                <div className="flex items-start gap-2">
+                                                    <span className="inline-flex items-center justify-center rounded-lg bg-amber-50 px-2 py-0.5 text-amber-600 text-xs font-semibold">
+                                                        {a.nota}★
+                                                    </span>
+                                                    <span className="text-sm text-gray-700">{a.comentario || "—"}</span>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </>
                                 ) : (
-                                    <li className="text-gray-500 text-sm">Sem avaliações ainda.</li>
+                                    <li className="text-gray-500 text-sm">
+                                        {filtro == null ? "Sem avaliações ainda." : `Sem avaliações de ${filtro}★.`}
+                                    </li>
                                 )}
                             </ul>
                         </div>
