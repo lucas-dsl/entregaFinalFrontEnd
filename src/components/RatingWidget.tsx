@@ -102,12 +102,12 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                     />
 
                     <div className="mt-1 text-right text-xs text-gray-500">
-                        {comentario.length}/255
+                        {comentario.length}/67
                     </div>
 
                     <button
                         onClick={enviar}
-                        disabled={sending || !score}
+                        disabled={sending || !score || comentario.length > 67}
                         className="mt-3 w-full rounded-xl bg-[#007474] text-white font-semibold py-2 hover:bg-[#006262] disabled:opacity-60"
                     >
                         {sending ? "Enviando..." : "Enviar avaliação"}
