@@ -113,7 +113,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                         onChange={(e) => setComentario(e.target.value)}
                     />
 
-                    <div className="mt-1 text-right text-xs text-gray-500">
+                    <div className={`mt-1 text-right text-xs ${comentario.length > 67 ? 'text-rose-600' : 'text-gray-500'}`}>
                         {comentario.length}/67
                     </div>
 
