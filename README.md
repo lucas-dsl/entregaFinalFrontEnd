@@ -14,15 +14,20 @@ src
 ┣ ┣ img
 ┣ ┣ logos
 ┣ components/
+┣ ┣ Chathc.tsx
 ┣ ┣ Footer.tsx
 ┣ ┣ Header.tsx
 ┣ ┣ MemberCard.tsx
+┣ ┣ MemberModal.tsx
+┣ ┣ RatingWidget.tsx
 ┣ pages/
 ┃ ┣ Contact.tsx
 ┃ ┣ Faq.tsx
 ┃ ┣ Home.tsx
 ┃ ┣ Members.tsx
 ┃ ┗ Solution.tsx
+┣ services/
+┣ ┣ avaliacoes.ts
 ┣ types/
 ┣ ┣ member.ts
 ┣ App.tsx
@@ -40,6 +45,7 @@ src
 - Vite  
 - TypeScript  
 - TailwindCSS  
+- Consumo de Api do Java
 
 ---
 
