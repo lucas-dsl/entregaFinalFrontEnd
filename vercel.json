@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://javabanco-api.onrender.com/:path*"
-    }
+    { "source": "/api/:path*", "destination": "https://javabanco-api.onrender.com/:path*" }
   ]
 }
