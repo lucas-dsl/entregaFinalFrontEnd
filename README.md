@@ -57,11 +57,11 @@ src
 
 ---
 
-# 🚀 Imagem com caixa para avaliar
+# 🖼️ Imagem com caixa para avaliar
 
 ![Demonstração – API 2](src/assets/img/demonstracao-api-2.png)
 
-# 🚀 Imagem com modal avaliações
+# 🖼️ Imagem com modal avaliações
 
 ![Demonstração – API 1](src/assets/img/demonstracao-api1.png)
 
@@ -70,6 +70,6 @@ src
 - Mensagem de agradecimento - ✨
 - Avaliação do chatbot - ★★★★★
 
-## 🚀 Repositório  
-git clone https://github.com/Challenge2025/sprint4.git
-video explicativo do youtube
+## 📦 Repositório  
+- git clone https://github.com/Challenge2025/sprint4.git
+- video explicativo do youtube https://youtu.be/EMYdYMjLM50?si=vWZh7IKy_FsVUtlY
