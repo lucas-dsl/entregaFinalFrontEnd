@@ -1,88 +1,70 @@
 import { useEffect, useMemo, useState } from "react";
 import { getAvaliacoes, createAvaliacao, type Avaliacao } from "../services/avaliacoes";
 
-type Props = { url?: string; className?: string };
+type Props = { className?: string };
 
-export default function RatingWidget({
-    url = 'https://javabanco-api.onrender.com/avaliacoes',
-    className,
-}: Props) {
-    const [open, setOpen] = useState(false);
-    const [showAll, setShowAll] = useState(false);
-    const [itens, setItens] = useState<Avaliacao[]>([]);
-    const [score, setScore] = useState(0);
-    const [comentario, setComentario] = useState("");
-    const [sending, setSending] = useState(false);
-    const [msg, setMsg] = useState<{ text: string; type: "ok" | "err" } | null>(null);
-    const [filtro, setFiltro] = useState<number | null>(null);
+export default function RatingWidget({ className }: Props) {
+  const [open, setOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const [itens, setItens] = useState<Avaliacao[]>([]);
+  const [score, setScore] = useState(0);
+  const [comentario, setComentario] = useState("");
+  const [sending, setSending] = useState(false);
+  const [msg, setMsg] = useState<{ text: string; type: "ok" | "err" } | null>(null);
+  const [filtro, setFiltro] = useState<number | null>(null);
 
-    useEffect(() => {
-        getAvaliacoes(url)
-            .then(setItens)
-            .catch((e) => setMsg({ text: `Falha ao carregar: ${e.message}`, type: "err" }));
-    }, [url]);
+  useEffect(() => {
+    getAvaliacoes().then(setItens).catch((e) => setMsg({ text: `Falha ao carregar: ${e.message}`, type: "err" }));
+  }, []);
 
-    useEffect(() => {
-        function onKey(e: KeyboardEvent) {
-            if (e.key === "Escape") setShowAll(false);
-        }
-        if (showAll) window.addEventListener("keydown", onKey);
-        return () => window.removeEventListener("keydown", onKey);
-    }, [showAll]);
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) { if (e.key === "Escape") setShowAll(false); }
+    if (showAll) window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showAll]);
 
-    const { media, total } = useMemo(() => {
-        if (!itens.length) return { media: 0, total: 0 };
-        const soma = itens.reduce((acc, a) => acc + (a.nota || 0), 0);
-        return { media: soma / itens.length, total: itens.length };
-    }, [itens]);
+  const { media, total } = useMemo(() => {
+    if (!itens.length) return { media: 0, total: 0 };
+    const soma = itens.reduce((acc, a) => acc + (a.nota || 0), 0);
+    return { media: soma / itens.length, total: itens.length };
+  }, [itens]);
 
-    const itensFiltrados = useMemo(() => {
-        if (filtro == null) return itens;
-        return itens.filter((a) => a.nota === filtro);
-    }, [itens, filtro]);
+  const itensFiltrados = useMemo(() => (filtro == null ? itens : itens.filter((a) => a.nota === filtro)), [itens, filtro]);
 
-    async function enviar() {
-        if (!score) {
-            setMsg({ text: "Escolha uma nota de 1 a 5.", type: "err" });
-            return;
-        }
-        setSending(true);
-        setMsg(null);
-        const comentarioSafe = (comentario?.trim() ?? "").slice(0, 255);
-        const basePayload = { nota: Number(score), comentario: comentarioSafe };
-        try {
-            await createAvaliacao(basePayload, url);
-        } catch (e1: any) {
-            try {
-                await createAvaliacao({ ...basePayload, idLog: 1 }, url);
-            } catch (e2: any) {
-                setMsg({ text: `Não foi possível enviar: ${e2.message}`, type: "err" });
-                setSending(false);
-                return;
-            }
-        }
-        const lista = await getAvaliacoes(url);
-        setItens(lista);
-        setScore(0);
-        setComentario("");
-        setMsg({ text: "Obrigado pela avaliação! ✨", type: "ok" });
+  async function enviar() {
+    if (!score) { setMsg({ text: "Escolha uma nota de 1 a 5.", type: "err" }); return; }
+    setSending(true);
+    setMsg(null);
+    const comentarioSafe = (comentario?.trim() ?? "").slice(0, 67);
+    try {
+      await createAvaliacao({ nota: Number(score), comentario: comentarioSafe });
+    } catch (e1: any) {
+      try {
+        await createAvaliacao({ nota: Number(score), comentario: comentarioSafe, idLog: 1 });
+      } catch (e2: any) {
+        setMsg({ text: `Não foi possível enviar: ${e2.message}`, type: "err" });
         setSending(false);
+        return;
+      }
     }
+    const lista = await getAvaliacoes();
+    setItens(lista);
+    setScore(0);
+    setComentario("");
+    setMsg({ text: "Obrigado pela avaliação! ✨", type: "ok" });
+    setSending(false);
+  }
 
-    const Star = ({ n }: { n: number }) => (
-        <button
-            type="button"
-            onClick={() => setScore(n)}
-            className={`text-2xl leading-none transition ${score >= n ? "text-amber-400" : "text-gray-400 hover:text-amber-400"
-                } focus:outline-none focus:ring-2 focus:ring-[#007474]/30 rounded`}
-            aria-label={`${n} estrela${n > 1 ? "s" : ""}`}
-        >
-            ★
-        </button>
-    );
+  const Star = ({ n }: { n: number }) => (
+    <button
+      type="button"
+      onClick={() => setScore(n)}
+      className={`text-2xl leading-none transition ${score >= n ? "text-amber-400" : "text-gray-400 hover:text-amber-400"} focus:outline-none focus:ring-2 focus:ring-[#007474]/30 rounded`}
+      aria-label={`${n} estrela${n > 1 ? "s" : ""}`}
+    >★</button>
+  );
 
-    return (
-        <div className={className}>
+  return (<div className={className}>
             <button
                 onClick={() => setOpen((v) => !v)}
                 className="rounded-full bg-[#007474] text-white px-4 py-2 sm:py-3 text-sm sm:text-base shadow-lg hover:bg-[#006262] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#007474]"
@@ -210,6 +192,5 @@ export default function RatingWidget({
                     </div>
                 </div>
             )}
-        </div>
-    );
+        </div>);
 }
