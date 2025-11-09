@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/avaliacoes", "destination": "https://javabanco-api.onrender.com/avaliacoes" }
+  ]
+}
