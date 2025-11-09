@@ -4,7 +4,7 @@ import { getAvaliacoes, createAvaliacao, type Avaliacao } from "../services/aval
 type Props = { url?: string; className?: string };
 
 export default function RatingWidget({
-    url = import.meta.env.VITE_AVALIACOES_URL || "/avaliacoes",
+    url = 'https://javabanco-api.onrender.com/avaliacoes',
     className,
 }: Props) {
     const [open, setOpen] = useState(false);
