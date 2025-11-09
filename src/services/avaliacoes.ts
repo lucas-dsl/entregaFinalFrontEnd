@@ -5,42 +5,33 @@ export type Avaliacao = {
   comentario?: string;
 };
 
-const ENDPOINT = (import.meta.env.VITE_AVALIACOES_URL || "").trim();
-const API_BASE = (import.meta.env.VITE_API_BASE || "").replace(/\/+$/, "");
-
-function resolveUrl(u?: string) {
-  if (u && /^https?:\/\//.test(u)) return u;
-  if (ENDPOINT) return ENDPOINT;
-  const path = (u || "/avaliacoes").startsWith("/")
-    ? (u || "/avaliacoes")
-    : `/${u || "avaliacoes"}`;
-  return API_BASE ? `${API_BASE}${path}` : path;
+const API_BASE = (import.meta.env.VITE_API_BASE as string | undefined)?.replace(/\/+$/, "");
+if (!API_BASE) {
+  throw new Error("VITE_API_BASE não configurada no build (Vercel Settings › Environment Variables).");
 }
 
-// GET
-export async function getAvaliacoes(url?: string): Promise<Avaliacao[]> {
-  const r = await fetch(resolveUrl(url));
+const AVALIACOES_URL = `${API_BASE}/avaliacoes`;
+
+if (typeof window !== "undefined") {
+  console.log("API_BASE =", API_BASE);
+  console.log("AVALIACOES_URL =", AVALIACOES_URL);
+}
+
+export async function getAvaliacoes(): Promise<Avaliacao[]> {
+  const r = await fetch(AVALIACOES_URL, { method: "GET" });
   if (!r.ok) throw new Error(`GET ${r.status}`);
   return r.json();
 }
 
-// POST
-export async function createAvaliacao(
-  body: { nota: number; comentario: string; idLog?: number },
-  url?: string
-) {
-  const r = await fetch(resolveUrl(url), {
+export async function createAvaliacao(body: { nota: number; comentario?: string; idLog?: number }) {
+  const r = await fetch(AVALIACOES_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
     body: JSON.stringify(body),
   });
   if (!r.ok) {
     const txt = await r.text().catch(() => "");
     throw new Error(`POST ${r.status} ${txt}`);
   }
-  try {
-    return await r.json();
-  } catch {
-    return null;
-  }
+  try { return await r.json(); } catch { return null; }
 }
