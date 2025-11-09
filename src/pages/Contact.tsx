@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const Contact = () => {
   const [name, setName] = useState<string>("");
@@ -17,8 +16,10 @@ const Contact = () => {
     message: "",
   });
 
+  const nameRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
-    document.getElementById("name")?.focus();
+    nameRef.current?.focus();
   }, []);
 
   const validateName = () => {
@@ -60,8 +61,7 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const isValid =
-      validateName() && validateEmail() && validateMessage();
+    const isValid = validateName() && validateEmail() && validateMessage();
 
     if (isValid) {
       console.log("Form submitted", { name, email, message });
@@ -104,6 +104,7 @@ const Contact = () => {
             <input
               type="text"
               id="name"
+              ref={nameRef}
               value={name}
               onChange={(e) => setName(e.target.value)}
               onBlur={validateName}
