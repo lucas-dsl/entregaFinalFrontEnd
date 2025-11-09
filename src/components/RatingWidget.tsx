@@ -3,7 +3,10 @@ import { getAvaliacoes, createAvaliacao, type Avaliacao } from "../services/aval
 
 type Props = { url?: string; className?: string };
 
-export default function RatingWidget({ url = "/api/avaliacoes", className }: Props) {
+export default function RatingWidget({
+    url = import.meta.env.VITE_AVALIACOES_URL || "/avaliacoes",
+    className,
+}: Props) {
     const [open, setOpen] = useState(false);
     const [showAll, setShowAll] = useState(false);
     const [itens, setItens] = useState<Avaliacao[]>([]);
@@ -35,7 +38,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
 
     const itensFiltrados = useMemo(() => {
         if (filtro == null) return itens;
-        return itens.filter(a => a.nota === filtro);
+        return itens.filter((a) => a.nota === filtro);
     }, [itens, filtro]);
 
     async function enviar() {
@@ -43,25 +46,21 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
             setMsg({ text: "Escolha uma nota de 1 a 5.", type: "err" });
             return;
         }
-
         setSending(true);
         setMsg(null);
-
         const comentarioSafe = (comentario?.trim() ?? "").slice(0, 255);
         const basePayload = { nota: Number(score), comentario: comentarioSafe };
-
         try {
-            await createAvaliacao(basePayload, url);                    // sem idLog
+            await createAvaliacao(basePayload, url);
         } catch (e1: any) {
             try {
-                await createAvaliacao({ ...basePayload, idLog: 1 }, url); // fallback com idLog
+                await createAvaliacao({ ...basePayload, idLog: 1 }, url);
             } catch (e2: any) {
                 setMsg({ text: `Não foi possível enviar: ${e2.message}`, type: "err" });
                 setSending(false);
                 return;
             }
         }
-
         const lista = await getAvaliacoes(url);
         setItens(lista);
         setScore(0);
@@ -84,7 +83,6 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
 
     return (
         <div className={className}>
-            {/* Botão abre e fecha Card */}
             <button
                 onClick={() => setOpen((v) => !v)}
                 className="rounded-full bg-[#007474] text-white px-4 py-2 sm:py-3 text-sm sm:text-base shadow-lg hover:bg-[#006262] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#007474]"
@@ -93,7 +91,6 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                 {open ? "Fechar feedback" : "Avaliar chatbot"}
             </button>
 
-            {/* Card */}
             {open && (
                 <div className="mt-3 w-full sm:w-80 rounded-2xl border bg-white/95 shadow-xl backdrop-blur p-4">
                     <div className="flex items-start justify-between">
@@ -127,7 +124,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                             </button>
                         </div>
 
-                        <div className={`mt-1 text-right text-xs ${comentario.length > 67 ? 'text-rose-600' : 'text-gray-500'}`}>
+                        <div className={`mt-1 text-right text-xs ${comentario.length > 67 ? "text-rose-600" : "text-gray-500"}`}>
                             {comentario.length}/67
                         </div>
                     </div>
@@ -146,26 +143,18 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                         </p>
                     )}
 
-                    <button
-                        onClick={() => setShowAll(true)}
-                        className="mt-3 w-full text-sm underline text-gray-700 hover:text-gray-900"
-                    >
+                    <button onClick={() => setShowAll(true)} className="mt-3 w-full text-sm underline text-gray-700 hover:text-gray-900">
                         Ver todas as avaliações
                     </button>
                 </div>
             )}
 
-            {/* Modal de Avaliações */}
             {showAll && (
                 <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" role="dialog" aria-modal="true">
                     <div className="w-[100vw] sm:w-[92vw] sm:max-w-xl h-[92dvh] sm:h-auto sm:max-h-[80vh] rounded-t-2xl sm:rounded-2xl bg-white shadow-2xl p-4">
                         <div className="flex items-center justify-between mb-2">
                             <h4 className="font-semibold">Todas as avaliações</h4>
-                            <button
-                                onClick={() => setShowAll(false)}
-                                className="rounded-lg px-2 py-1 border hover:bg-gray-50"
-                                aria-label="Fechar"
-                            >
+                            <button onClick={() => setShowAll(false)} className="rounded-lg px-2 py-1 border hover:bg-gray-50" aria-label="Fechar">
                                 ✕
                             </button>
                         </div>
@@ -176,22 +165,20 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                             <button
                                 type="button"
                                 onClick={() => setFiltro(null)}
-                                className={`px-2.5 py-1 rounded-lg border transition
-                                ${filtro == null ? "bg-cyan-600 text-white border-cyan-600"
-                                        : "border-gray-300 text-gray-700 hover:bg-gray-50"}`}
+                                className={`px-2.5 py-1 rounded-lg border transition ${filtro == null ? "bg-cyan-600 text-white border-cyan-600" : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                                    }`}
                                 aria-pressed={filtro == null}
                             >
                                 Todas
                             </button>
 
-                            {[1, 2, 3, 4, 5].map(n => (
+                            {[1, 2, 3, 4, 5].map((n) => (
                                 <button
                                     key={n}
                                     type="button"
                                     onClick={() => setFiltro(n)}
-                                    className={`px-2.5 py-1 rounded-lg border transition
-                                    ${filtro === n ? "bg-cyan-600 text-white border-cyan-600"
-                                            : "border-gray-300 text-gray-700 hover:bg-gray-50"}`}
+                                    className={`px-2.5 py-1 rounded-lg border transition ${filtro === n ? "bg-cyan-600 text-white border-cyan-600" : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                                        }`}
                                     aria-pressed={filtro === n}
                                     title={`Apenas ${n} estrela${n > 1 ? "s" : ""}`}
                                 >
@@ -216,9 +203,7 @@ export default function RatingWidget({ url = "/api/avaliacoes", className }: Pro
                                         ))}
                                     </>
                                 ) : (
-                                    <li className="text-gray-500 text-sm">
-                                        {filtro == null ? "Sem avaliações ainda." : `Sem avaliações de ${filtro}★.`}
-                                    </li>
+                                    <li className="text-gray-500 text-sm">{filtro == null ? "Sem avaliações ainda." : `Sem avaliações de ${filtro}★.`}</li>
                                 )}
                             </ul>
                         </div>
