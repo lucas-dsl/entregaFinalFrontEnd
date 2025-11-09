@@ -141,7 +141,7 @@ const Solution = () => {
       </div>
 
       <div className="fixed left-6 bottom-7 z-40">
-        <RatingWidget url="/api/avaliacoes" />
+        <RatingWidget/>
       </div>
       <ChatHC chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
