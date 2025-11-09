@@ -12,6 +12,8 @@ const Solution = () => {
   });
   const [chatOpen, setChatOpen] = useState(false);
 
+  const [showInfo, setShowInfo] = useState(false);
+
   const cpfError = useMemo(() => {
     if (!touched.cpf) return "";
     const onlyDigits = cpf.replace(/\D/g, "");
@@ -34,7 +36,7 @@ const Solution = () => {
     setTouched({ cpf: true, senha: true });
     if (formInvalid) return;
 
-    alert("Envio Válido");
+    setShowInfo(true);
   }
 
   return (
@@ -58,8 +60,9 @@ const Solution = () => {
           value={cpf}
           onChange={(e) => setCpf(e.target.value)}
           onBlur={() => setTouched((t) => ({ ...t, cpf: true }))}
-          className={`w-full p-3 mb-1 border rounded-md ${cpfError ? "border-rose-500" : "border-gray-300"
-            }`}
+          className={`w-full p-3 mb-1 border rounded-md ${
+            cpfError ? "border-rose-500" : "border-gray-300"
+          }`}
           aria-invalid={!!cpfError}
           aria-describedby="cpf-erro"
         />
@@ -75,8 +78,9 @@ const Solution = () => {
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
           onBlur={() => setTouched((t) => ({ ...t, senha: true }))}
-          className={`w-full p-3 mb-1 border rounded-md ${senhaError ? "border-rose-500" : "border-gray-300"
-            }`}
+          className={`w-full p-3 mb-1 border rounded-md ${
+            senhaError ? "border-rose-500" : "border-gray-300"
+          }`}
           aria-invalid={!!senhaError}
           aria-describedby="senha-erro"
         />
@@ -130,6 +134,44 @@ const Solution = () => {
         <RatingWidget url="/api/avaliacoes" />
       </div>
       <ChatHC chatOpen={chatOpen} setChatOpen={setChatOpen} />
+
+      {showInfo && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setShowInfo(false)} 
+        >
+          <div
+            className="w-[92vw] max-w-md rounded-2xl bg-white shadow-2xl p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <h4 className="text-lg font-semibold">Informação</h4>
+              <button
+                onClick={() => setShowInfo(false)}
+                className="rounded-lg px-2 py-1 border hover:bg-gray-50"
+                aria-label="Fechar"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-sm text-gray-700">
+              Este formulário é apenas uma simulação para fins de demonstração. Sistema de login não adicionado.
+            </p>
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                onClick={() => setShowInfo(false)}
+                className="px-4 py-2 rounded-lg border hover:bg-gray-50"
+              >
+                Entendi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
